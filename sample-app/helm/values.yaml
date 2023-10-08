@@ -1,0 +1,12 @@
+app:
+  replicas: 1
+  image:
+    name: paulofponciano/webgo
+    tag: latest
+  service:
+    type: LoadBalancer
+  ingress:
+    className: nginx
+    enabled: true
+    hosts:
+    - aea80763ddd2945c985093ea791fcdeb-1242147105.us-east-2.elb.amazonaws.com
