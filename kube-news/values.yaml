@@ -1,0 +1,14 @@
+postgres:
+  tag: 15.0
+  credentials:
+    dbName: kubenews
+    userName: kubenews
+    userPwd: kube321
+
+web:
+  image: fabricioveronez/devops-news
+  tag: 11
+  serviceType: ClusterIP
+  ingress:
+    enabled: true
+    domain: pauloponciano.digital

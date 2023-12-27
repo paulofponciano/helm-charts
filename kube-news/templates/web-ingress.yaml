@@ -1,0 +1,43 @@
+{{ if .Values.web.ingress.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ .Release.Name }}-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - hosts:
+        - {{ .Release.Name }}.{{ .Values.web.ingress.domain }}
+      port:
+        name: http
+        number: 80
+        protocol: HTTP
+      tls:
+        httpsRedirect: true
+    - hosts:
+        - {{ .Release.Name }}.{{ .Values.web.ingress.domain }}
+      port:
+        name: https-workloads
+        number: 443
+        protocol: HTTP
+      tls:
+        mode: PASSTHROUGH
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  gateways:
+    - {{ .Release.Name }}-gateway
+  hosts:
+    - {{ .Release.Name }}.{{ .Values.web.ingress.domain }}
+  http:
+    - route:
+        - destination:
+            host: {{ .Release.Name }}-web.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+          weight: 100
+{{ end }}
